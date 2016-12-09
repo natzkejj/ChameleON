@@ -1,4 +1,6 @@
-﻿
+﻿using System.Collections.Specialized;
+using System.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace ChameleON
 {
@@ -8,8 +10,17 @@ namespace ChameleON
     public class Chameleon : IChromatophores
     {
         private string ToggleName = "";
-        public Chameleon([System.Runtime.CompilerServices.CallerMemberName]string methodName= "")
+
+        private NameValueCollection Settings;
+
+        public Chameleon([CallerMemberName]string methodName = "")
+            : this(ConfigurationManager.AppSettings, methodName)
         {
+        }
+
+        public Chameleon(NameValueCollection settings, [CallerMemberName]string methodName = "")
+        {
+            Settings = settings == null ? new NameValueCollection() : settings;
             ToggleName = methodName;
         }
 
@@ -17,9 +28,8 @@ namespace ChameleON
         {
             get
             {
-                return new ConfigurationSettings().Tounge(ToggleName);
+                return new ConfigurationSettings(Settings).Tongue(ToggleName);
             }
         }
-
-    }   
+    }
 }
